@@ -64,8 +64,13 @@ bool do_exec(int count, ...)
     int status;
     fflush(stdout);
     pid_t processId = fork();
-    if(processId == 0){
-   	execv(command[0], command); 	
+    if(processId == -1){
+      va_end(args);
+      return false;
+    }
+    else if(processId == 0){
+   	execv(command[0], command);
+   	exit(EXIT_FAILURE);
     }else{
     
 	wait(&status);
@@ -73,9 +78,9 @@ bool do_exec(int count, ...)
     
     va_end(args);
     
-        if(WIFEXITED(status) && WEXITSTATUS(status) == 0)
-                return true;
-        return false;
+    if(WIFEXITED(status) && WEXITSTATUS(status) == 0)
+            return true;
+    return false;
 
 }
 
@@ -138,7 +143,8 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     }
 
     va_end(args);
-	if(WIFEXITED(status) && WEXITSTATUS(status) == 0)
-    		return true;
-	return false;
+    
+    if(WIFEXITED(status) && WEXITSTATUS(status) == 0)
+      		return true;
+    return false;
 }
