@@ -62,6 +62,7 @@ bool do_exec(int count, ...)
  *
 */
     int status;
+    fflush(stdout);
     pid_t processId = fork();
     if(processId == 0){
    	execv(command[0], command); 	
@@ -113,6 +114,7 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
 	return false;
     }
 
+    fflush(stdout);
     int kidpid;
     int status;
 
